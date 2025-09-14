@@ -1,0 +1,146 @@
+#BASE {
+  background-color: #ddd;
+  font-size: 20px;
+  color: #333;
+}
+* {
+  box-sizing: border-box;
+  font-family: "Roboto", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  line-height: 1.6;
+}
+
+h1 {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 2.5em;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  color: #34495e;
+  margin-top: 25px;
+  margin-bottom: 15px;
+  font-size: 1.8em;
+}
+
+h3 {
+  color: #16a085;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-size: 1.4em;
+}
+
+p {
+  margin-bottom: 15px;
+  text-align: justify;
+}
+
+.highlight {
+  background-color: #f39c12;
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+
+.italic-text {
+  font-style: italic;
+  color: #7f8c8d;
+}
+
+.bold-text {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.link {
+  color: #3498db;
+  text-decoration: none;
+  border-bottom: 2px solid #3498db;
+  transition: all 0.3s ease;
+}
+
+.link:hover {
+  background-color: #3498db;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+.image-container {
+  text-align: center;
+  margin: 25px 0;
+}
+
+.voyager-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.video-container {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.video-frame {
+  max-width: 100%;
+  height: 315px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  background-color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-table th {
+  background-color: #34495e;
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.info-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ecf0f1;
+}
+
+.info-table tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.info-table tr:hover {
+  background-color: #e8f4f8;
+  transition: background-color 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  .video-frame {
+    height: 200px;
+  }
+}
