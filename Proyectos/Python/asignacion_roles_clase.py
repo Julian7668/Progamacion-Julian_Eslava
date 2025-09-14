@@ -28,8 +28,7 @@ for i in range(
 
 print(
     *(
-        f"""
-{
+        f"""{
             search_key_in_dict(
                 estudiantes,
                 sorted(estudiantes.values(), reverse=True)[(0 if i == 0 else -1)],
@@ -39,3 +38,4 @@ print(
     ),
     sep="\n",
 )
+
