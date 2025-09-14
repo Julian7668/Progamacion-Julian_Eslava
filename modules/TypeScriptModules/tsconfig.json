@@ -1,0 +1,59 @@
+{
+  "compilerOptions": {
+    // Configuración básica
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "lib": ["ES2020", "DOM"],
+
+    // Rutas y resolución de módulos
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./*"],
+      "@utils/*": ["./utils/*"],
+      "@validates/*": ["./validates/*"],
+      // Mapeos directos sin index.ts
+      "@utils": ["./utils/MDcapitalize"],
+      "@validates": ["./validates/MDvalidateType"]
+    },
+
+    // Configuración de salida
+    "outDir": "./dist",
+    "rootDir": "./",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+
+    // Configuración estricta (recomendado para aprender buenas prácticas)
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": false,
+
+    // Configuración adicional
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
+    "ignoreDeprecations": "6.0",
+
+    // Para mejor experiencia de desarrollo
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo"
+  },
+
+  "include": ["./**/*.ts", "./**/*.tsx"],
+
+  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"],
+
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
+  }
+}
