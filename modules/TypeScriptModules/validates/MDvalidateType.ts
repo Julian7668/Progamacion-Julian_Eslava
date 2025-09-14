@@ -1,4 +1,4 @@
-function validateType(
+export function validateType(
   x: string,
   typeObjective: Function = String,
   isFloat: boolean,
