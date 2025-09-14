@@ -13,7 +13,7 @@ for i in range(
     )
 ):
     nombre_estudiante = questi.text(
-        f"Ingrese el nombre del {get_ordinal(i+1)} estudiante:",
+        f"Ingrese el nombre del {get_ordinal(i + 1)} estudiante:",
         validate=lambda x: x.capitalize() not in estudiantes,  # type: ignore
     ).capitalize()
     estudiantes[nombre_estudiante] = int(
@@ -26,7 +26,16 @@ for i in range(
     )
     print()
 
-values_ordenados: list[int] = sorted(estudiantes.values(), reverse=True)
-
-print(search_key_in_dict(estudiantes, values_ordenados[0]), "sera el profesor")
-print(search_key_in_dict(estudiantes, values_ordenados[-1]), "sera el asistente")
+print(
+    *(
+        f"""
+{
+            search_key_in_dict(
+                estudiantes,
+                sorted(estudiantes.values(), reverse=True)[(0 if i == 0 else -1)],
+            )
+        } sera el {"profesor" if i == 0 else "asistente"}"""
+        for i in range(2)
+    ),
+    sep="\n",
+)
