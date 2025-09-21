@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "titulo": "Aprender FastAPI",
+    "descripcion": "Estudiar los conceptos básicos de FastAPI y crear mi primera API REST",
+    "completada": false
+  },
+  {
+    "id": 3,
+    "titulo": "Crear proyecto personal",
+    "descripcion": "Desarrollar una aplicación web completa usando Python y FastAPI",
+    "completada": true
+  },
+  {
+    "id": 4,
+    "titulo": "Aprender ingles",
+    "descripcion": "Estudiar la gramatica del idioma a profundidad con soporte del libro mastery",
+    "completada": false
+  }
+]

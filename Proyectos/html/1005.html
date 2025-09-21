@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Horario Curso 1005</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: #e8e8e8;
+        min-height: 100vh;
+        padding: 20px;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 2.5rem;
+        background: linear-gradient(135deg, #00f5ff 0%, #ff6b35 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        padding: 10px 0;
+      }
+
+      .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(20, 25, 45, 0.8);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 245, 255, 0.3);
+      }
+
+      .schedule-table th {
+        background: linear-gradient(135deg, #0f3460 0%, #e94560 100%);
+        color: white;
+        padding: 18px;
+        text-align: center;
+        font-weight: 600;
+        font-size: 1.1rem;
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+      }
+
+      .schedule-table th:hover {
+        transform: translateY(-3px);
+        background: linear-gradient(135deg, #1e5f8b 0%, #ff5722 100%);
+        box-shadow: 0 5px 15px rgba(0, 245, 255, 0.4);
+      }
+
+      .schedule-table td {
+        padding: 16px;
+        text-align: center;
+        border: 1px solid rgba(50, 60, 90, 0.6);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        color: #ffffff;
+        font-weight: 500;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+      }
+
+      .schedule-table td::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.25),
+          transparent
+        );
+        transition: left 0.7s ease;
+      }
+
+      .schedule-table td:hover::before {
+        left: 100%;
+      }
+
+      .schedule-table td:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 245, 255, 0.4);
+        z-index: 10;
+      }
+
+      .tooltip {
+        position: absolute;
+        background: rgba(15, 20, 35, 0.95);
+        border: 1px solid #00f5ff;
+        padding: 14px;
+        border-radius: 10px;
+        font-size: 1rem;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(8px);
+        max-width: 320px;
+        line-height: 1.6;
+      }
+
+      .tooltip.show {
+        opacity: 1;
+      }
+
+      .subject-page {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .back-button {
+        background: linear-gradient(135deg, #0f3460 0%, #e94560 100%);
+        color: white;
+        border: none;
+        padding: 14px 28px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 1.1rem;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 245, 255, 0.3);
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .back-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 245, 255, 0.5);
+        background: linear-gradient(135deg, #1e5f8b 0%, #ff5722 100%);
+      }
+
+      .tasks-container {
+        background: rgba(20, 25, 45, 0.8);
+        border-radius: 15px;
+        padding: 30px;
+        margin-top: 20px;
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 245, 255, 0.3);
+      }
+
+      .task {
+        background: rgba(30, 35, 55, 0.8);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      .task:hover {
+        transform: translateX(8px);
+        box-shadow: 0 6px 20px rgba(0, 245, 255, 0.4);
+        background: rgba(40, 45, 70, 0.9);
+      }
+
+      .task-info {
+        flex: 1;
+      }
+
+      .task-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #f5f5f5;
+      }
+
+      .task-description {
+        color: #b0b8ff;
+        font-size: 1rem;
+      }
+
+      .task-status {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .checkbox {
+        width: 26px;
+        height: 26px;
+        border: 2px solid #00f5ff;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+      }
+
+      .checkbox.checked {
+        background: linear-gradient(135deg, #0f3460 0%, #e94560 100%);
+      }
+
+      .checkbox.checked::after {
+        content: "✓";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 16px;
+      }
+
+      .status-label {
+        font-weight: 500;
+        color: #00f5ff;
+        min-width: 110px;
+        text-align: right;
+      }
+
+      .status-label.completed {
+        color: #00ff87;
+      }
+
+      /* NUEVA PALETA DE COLORES POR ÁREAS */
+
+      /* ÁREA HUMANÍSTICA - Tonos Dorados/Naranjas */
+      .español {
+        background: linear-gradient(
+          135deg,
+          #ff6b35 0%,
+          #f7931e 100%
+        ) !important;
+      }
+
+      /* ÁREA ARTÍSTICA - Tonos Púrpuras/Violetas */
+      .danzas {
+        background: linear-gradient(
+          135deg,
+          #8e44ad 0%,
+          #9b59b6 100%
+        ) !important;
+      }
+      .cultura {
+        background: linear-gradient(
+          135deg,
+          #663399 0%,
+          #7b68ee 100%
+        ) !important;
+      }
+
+      /* ÁREA IDIOMAS - Tonos Azules Intensos */
+      .ingles {
+        background: linear-gradient(
+          135deg,
+          #1e3c72 0%,
+          #2a5298 100%
+        ) !important;
+      }
+
+      /* ÁREA CIENCIAS NATURALES - Tonos Verdes */
+      .química {
+        background: linear-gradient(
+          135deg,
+          #795548 0%,
+          #8d6e63 100%
+        ) !important;
+      }
+      .física {
+        background: linear-gradient(
+          135deg,
+          #16a085 0%,
+          #1abc9c 100%
+        ) !important;
+      }
+
+      /* ÁREA TECNOLOGÍA/PROGRAMACIÓN - Tonos Cian/Turquesa */
+      .tecnología {
+        background: linear-gradient(
+          135deg,
+          #00bcd4 0%,
+          #00acc1 100%
+        ) !important;
+      }
+      .algoritmos {
+        background: linear-gradient(
+          135deg,
+          #0097a7 0%,
+          #00838f 100%
+        ) !important;
+      }
+      .pensamiento {
+        background: linear-gradient(
+          135deg,
+          #006064 0%,
+          #00695c 100%
+        ) !important;
+      }
+
+      /* ÁREA CIENCIAS SOCIALES - Tonos Rojos/Carmesí */
+      .sociales {
+        background: linear-gradient(
+          135deg,
+          #c0392b 0%,
+          #e74c3c 100%
+        ) !important;
+      }
+      .politica {
+        background: linear-gradient(
+          135deg,
+          #7b1fa2 0%,
+          #8e24aa 100%
+        ) !important;
+      }
+      .etica {
+        background: linear-gradient(
+          135deg,
+          #ad1457 0%,
+          #c2185b 100%
+        ) !important;
+      }
+
+      /* ÁREA FILOSOFÍA/REFLEXIÓN - Tonos Magenta/Rosa */
+      .filosofía {
+        background: linear-gradient(
+          135deg,
+          #d81b60 0%,
+          #ec407a 100%
+        ) !important;
+      }
+      .religion {
+        background: linear-gradient(
+          135deg,
+          #7b1fa2 0%,
+          #8e24aa 100%
+        ) !important;
+      }
+
+      /* ÁREA MATEMÁTICAS - Tonos Índigo/Azul Profundo */
+      .matemáticas {
+        background: linear-gradient(
+          135deg,
+          #3f51b5 0%,
+          #5c6bc0 100%
+        ) !important;
+      }
+
+      /* ÁREA EDUCACIÓN FÍSICA - Tonos Lima/Verde Claro */
+      .educacion {
+        background: linear-gradient(
+          135deg,
+          #8bc34a 0%,
+          #9ccc65 100%
+        ) !important;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        h1 {
+          font-size: 2rem;
+        }
+
+        .schedule-table th,
+        .schedule-table td {
+          padding: 12px 6px;
+          font-size: 0.9rem;
+        }
+
+        .task {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        .task-status {
+          width: 100%;
+          justify-content: space-between;
+        }
+
+        .back-button {
+          padding: 12px 20px;
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="schedule-view">
+        <h1>Horario Curso 1005</h1>
+        <table class="schedule-table">
+          <thead>
+            <tr>
+              <th data-day="lunes">Lunes</th>
+              <th data-day="martes">Martes</th>
+              <th data-day="miercoles">Miércoles</th>
+              <th data-day="jueves">Jueves</th>
+              <th data-day="viernes">Viernes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-subject="Español" class="español">Español</td>
+              <td data-subject="Danzas" class="danzas">Danzas</td>
+              <td data-subject="Pensamiento" class="pensamiento">
+                Pensamiento
+              </td>
+              <td data-subject="Tecnología" class="tecnología">Tecnología</td>
+              <td data-subject="Cultura" class="cultura">Cultura (N)</td>
+            </tr>
+            <tr>
+              <td data-subject="Español" class="español">Español</td>
+              <td data-subject="Danzas" class="danzas">Danzas</td>
+              <td data-subject="Inglés" class="ingles">Inglés</td>
+              <td data-subject="Tecnología" class="tecnología">Tecnología</td>
+              <td data-subject="Física" class="física">Física</td>
+            </tr>
+            <tr>
+              <td data-subject="Cultura" class="cultura">Cultura (X)</td>
+              <td data-subject="Filosofía" class="filosofía">Filosofía</td>
+              <td data-subject="Química" class="química">Química</td>
+              <td data-subject="Inglés" class="ingles">Inglés</td>
+              <td data-subject="Algoritmos" class="algoritmos">Algoritmos</td>
+            </tr>
+            <tr>
+              <td data-subject="Pensamiento" class="pensamiento">
+                Pensamiento
+              </td>
+              <td data-subject="Filosofía" class="filosofía">Filosofía</td>
+              <td data-subject="Química" class="química">Química</td>
+              <td data-subject="Inglés" class="ingles">Inglés</td>
+              <td data-subject="Pensamiento" class="pensamiento">
+                Pensamiento
+              </td>
+            </tr>
+            <tr>
+              <td data-subject="Pensamiento" class="pensamiento">
+                Pensamiento
+              </td>
+              <td data-subject="Sociales" class="sociales">Sociales</td>
+              <td data-subject="Algoritmos" class="algoritmos">Algoritmos</td>
+              <td data-subject="Política" class="politica">Política</td>
+              <td data-subject="Educación Física" class="educacion">
+                Educación Física
+              </td>
+            </tr>
+            <tr>
+              <td data-subject="Química" class="química">Química</td>
+              <td data-subject="Sociales" class="sociales">Sociales</td>
+              <td data-subject="Algoritmos" class="algoritmos">Algoritmos</td>
+              <td data-subject="Ética" class="etica">Ética</td>
+              <td data-subject="Educación Física" class="educacion">
+                Educación Física
+              </td>
+            </tr>
+            <tr>
+              <td data-subject="Matemáticas" class="matemáticas">
+                Matemáticas
+              </td>
+              <td data-subject="Física" class="física">Física</td>
+              <td data-subject="Matemáticas" class="matemáticas">
+                Matemáticas
+              </td>
+              <td data-subject="Español" class="español">Español</td>
+              <td data-subject="Cultura" class="cultura">Cultura (A)</td>
+            </tr>
+            <tr>
+              <td data-subject="Matemáticas" class="matemáticas">
+                Matemáticas
+              </td>
+              <td data-subject="Física" class="física">Física</td>
+              <td data-subject="Matemáticas" class="matemáticas">
+                Matemáticas
+              </td>
+              <td data-subject="Español" class="español">Español</td>
+              <td data-subject="Religión" class="religion">Religión</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="subject-page" class="subject-page">
+        <button class="back-button" onclick="showSchedule()">
+          ← Volver al Horario
+        </button>
+        <h1 id="subject-title"></h1>
+        <div class="tasks-container" id="tasks-container"></div>
+      </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+      // Estado de las tareas
+      const tasksData = {
+        Español: [],
+        Danzas: [],
+        Pensamiento: [
+          {
+            id: 1,
+            title: "Aprendizajes para la Paz y la Inclusión",
+            description:
+              "Copiar los Aprendizajes para la Paz y la Inclusión que se encuentran en la imagen del enlace https://i.imgur.com/8FIxOhx.png",
+            completed: false,
+          },
+        ],
+        Tecnología: [],
+        Cultura: [],
+        Física: [],
+        Filosofía: [],
+        Inglés: [],
+        Química: [],
+        Algoritmos: [],
+        Sociales: [],
+        "Política y Religión": [],
+        Ética: [],
+        Matemáticas: [],
+        "Educación Física": [],
+      };
+
+      // Variables globales
+      let currentSubject = null;
+      const tooltip = document.getElementById("tooltip");
+
+      // Función para obtener tareas pendientes
+      function getPendingTasks(subject) {
+        // Normalizar cultura
+        const normalizedSubject = subject.startsWith("Cultura")
+          ? "Cultura"
+          : subject;
+
+        // Normalizar política/religión
+        const politicsReligion = ["Política", "Religión"].includes(subject)
+          ? "Política y Religión"
+          : normalizedSubject;
+
+        if (!tasksData[politicsReligion]) return 0;
+        return tasksData[politicsReligion].filter((task) => !task.completed)
+          .length;
+      }
+
+      // Función para obtener resumen del día
+      function getDaySummary(day) {
+        const dayColumns = {
+          lunes: 0,
+          martes: 1,
+          miercoles: 2,
+          jueves: 3,
+          viernes: 4,
+        };
+
+        const columnIndex = dayColumns[day];
+        const cells = document.querySelectorAll(
+          `tbody td:nth-child(${columnIndex + 1})`
+        );
+        const subjects = new Set();
+        let totalPending = 0;
+
+        cells.forEach((cell) => {
+          const subject = cell.getAttribute("data-subject");
+
+          // Normalizar cultura
+          const normalizedSubject = subject.startsWith("Cultura")
+            ? "Cultura"
+            : subject;
+
+          // Normalizar política/religión
+          const politicsReligion = ["Política", "Religión"].includes(
+            normalizedSubject
+          )
+            ? "Política y Religión"
+            : normalizedSubject;
+
+          if (politicsReligion && !subjects.has(politicsReligion)) {
+            subjects.add(politicsReligion);
+            totalPending += getPendingTasks(politicsReligion);
+          }
+        });
+
+        return { subjects: Array.from(subjects), totalPending };
+      }
+
+      // Event listeners para las celdas
+      document.querySelectorAll(".schedule-table td").forEach((cell) => {
+        cell.addEventListener("mouseenter", function (e) {
+          const subject = this.getAttribute("data-subject");
+          const pending = getPendingTasks(subject);
+
+          tooltip.innerHTML = `<strong>${subject}</strong><br>Tareas pendientes: ${pending}`;
+          tooltip.classList.add("show");
+
+          const rect = this.getBoundingClientRect();
+          tooltip.style.left = `${Math.min(
+            window.innerWidth - tooltip.offsetWidth - 10,
+            Math.max(10, rect.left + rect.width / 2 - tooltip.offsetWidth / 2)
+          )}px`;
+          tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`;
+        });
+
+        cell.addEventListener("mouseleave", function () {
+          tooltip.classList.remove("show");
+        });
+
+        cell.addEventListener("click", function () {
+          const subject = this.getAttribute("data-subject");
+          showSubjectPage(subject);
+        });
+      });
+
+      // Event listeners para los días
+      document.querySelectorAll(".schedule-table th").forEach((th) => {
+        th.addEventListener("mouseenter", function (e) {
+          const day = this.getAttribute("data-day");
+          if (!day) return;
+
+          const summary = getDaySummary(day);
+          const subjectsList = summary.subjects
+            .map((s) => {
+              const pending = getPendingTasks(s);
+              return pending > 0 ? `${s} (${pending})` : s;
+            })
+            .join("<br>");
+
+          tooltip.innerHTML = `<strong>${
+            day.charAt(0).toUpperCase() + day.slice(1)
+          }</strong><br>
+                                  Total tareas pendientes: ${
+                                    summary.totalPending
+                                  }<br>
+                                  <small>${subjectsList}</small>`;
+          tooltip.classList.add("show");
+
+          const rect = this.getBoundingClientRect();
+          tooltip.style.left = `${Math.min(
+            window.innerWidth - tooltip.offsetWidth - 10,
+            Math.max(10, rect.left + rect.width / 2 - tooltip.offsetWidth / 2)
+          )}px`;
+          tooltip.style.top = `${rect.bottom + 10}px`;
+        });
+
+        th.addEventListener("mouseleave", function () {
+          tooltip.classList.remove("show");
+        });
+      });
+
+      // Función para mostrar la página de la materia
+      function showSubjectPage(subject) {
+        currentSubject = subject;
+        document.getElementById("schedule-view").style.display = "none";
+        document.getElementById("subject-page").style.display = "block";
+
+        // Normalizar cultura
+        if (subject.startsWith("Cultura")) {
+          document.getElementById("subject-title").textContent = "Cultura";
+        }
+        // Normalizar política/religión
+        else if (subject === "Política" || subject === "Religión") {
+          document.getElementById("subject-title").textContent =
+            "Política y Religión";
+        } else {
+          document.getElementById("subject-title").textContent = subject;
+        }
+
+        renderTasks();
+      }
+
+      // Función para volver al horario
+      function showSchedule() {
+        document.getElementById("schedule-view").style.display = "block";
+        document.getElementById("subject-page").style.display = "none";
+        tooltip.classList.remove("show");
+      }
+
+      // Función para renderizar las tareas
+      function renderTasks() {
+        const container = document.getElementById("tasks-container");
+
+        // Normalizar cultura
+        const normalizedSubject = currentSubject.startsWith("Cultura")
+          ? "Cultura"
+          : currentSubject;
+
+        // Normalizar política/religión
+        const politicsReligion = ["Política", "Religión"].includes(
+          normalizedSubject
+        )
+          ? "Política y Religión"
+          : normalizedSubject;
+
+        const tasks = tasksData[politicsReligion] || [];
+
+        if (tasks.length === 0) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 40px; color: #b0b8ff;">
+              <h3>No hay tareas pendientes</h3>
+              <p>¡Excelente! Todas las tareas están completadas.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = tasks
+          .map(
+            (task) => `
+                <div class="task">
+                    <div class="task-info">
+                        <div class="task-title">${task.title}</div>
+                        <div class="task-description">${task.description}</div>
+                    </div>
+                    <div class="task-status">
+                        <div class="checkbox ${task.completed ? "checked" : ""}"
+                             onclick="toggleTask(${task.id})"></div>
+                        <span class="status-label ${
+                          task.completed ? "completed" : ""
+                        }">
+                            ${task.completed ? "Completada" : "Pendiente"}
+                        </span>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Función para cambiar el estado de una tarea
+      function toggleTask(taskId) {
+        for (let subject in tasksData) {
+          const task = tasksData[subject].find((t) => t.id === taskId);
+          if (task) {
+            task.completed = !task.completed;
+            renderTasks();
+            break;
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
